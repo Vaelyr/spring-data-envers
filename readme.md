@@ -32,6 +32,14 @@ To successfully activate the Spring Data Envers repository factory use the Sprin
                   factory-class="….EnversRevisionRepositoryFactoryBean" />
 ```
 
+# Install locally
+
+```
+mvn jar:jar install:install-file -Dfile=.\target\spring-data-envers-0.3.0.BUILD-SNAPSHOT.jar -DgroupId=org.springframework.data -DartifactId=spring-data-
+envers -Dversion=0.3.0.BUILD-SNAPSHOT -Dpackaging=jar 
+```
+
+
 # Contributing to the project
 
 If you're an Eclipse user make sure you activate automatic application of the formatter (located at `etc/eclipse-formatter.xml`) and activate automatic formatting and organizing imports on save.

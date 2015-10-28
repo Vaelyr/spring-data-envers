@@ -26,6 +26,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.history.RevisionRepository;
@@ -33,7 +34,7 @@ import org.springframework.data.repository.history.support.RevisionEntityInforma
 
 /**
  * {@link FactoryBean} creating {@link RevisionRepository} instances.
- * 
+ *
  * @author Oliver Gierke
  */
 public class EnversRevisionRepositoryFactoryBean extends
@@ -43,7 +44,7 @@ public class EnversRevisionRepositoryFactoryBean extends
 
 	/**
 	 * Configures the revision entity class. Will default to {@link DefaultRevisionEntity}.
-	 * 
+	 *
 	 * @param revisionEntityClass
 	 */
 	public void setRevisionEntityClass(Class<?> revisionEntityClass) {
@@ -61,7 +62,7 @@ public class EnversRevisionRepositoryFactoryBean extends
 
 	/**
 	 * Repository factory creating {@link RevisionRepository} instances.
-	 * 
+	 *
 	 * @author Oliver Gierke
 	 */
 	private static class RevisionRepositoryFactory extends JpaRepositoryFactory {
@@ -70,7 +71,7 @@ public class EnversRevisionRepositoryFactoryBean extends
 
 		/**
 		 * Creates a new {@link RevisionRepositoryFactory} using the given {@link EntityManager} and revision entity class.
-		 * 
+		 *
 		 * @param entityManager must not be {@literal null}.
 		 * @param revisionEntityClass can be {@literal null}, will default to {@link DefaultRevisionEntity}.
 		 */
@@ -86,13 +87,11 @@ public class EnversRevisionRepositoryFactoryBean extends
 		 * (non-Javadoc)
 		 * @see org.springframework.data.jpa.repository.support.JpaRepositoryFactory#getTargetRepository(org.springframework.data.repository.core.RepositoryMetadata, javax.persistence.EntityManager)
 		 */
-		@Override
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		protected <T, ID extends Serializable> SimpleJpaRepository<?, ?> getTargetRepository(RepositoryMetadata metadata,
-				EntityManager entityManager) {
 
-			JpaEntityInformation<T, Serializable> entityInformation = (JpaEntityInformation<T, Serializable>) getEntityInformation(metadata
-					.getDomainType());
+		@Override
+		@SuppressWarnings({"unchecked"})
+		protected <T, ID extends Serializable> SimpleJpaRepository<?, ?> getTargetRepository(RepositoryInformation information, EntityManager entityManager) {
+			JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(information.getDomainType());
 			return new EnversRevisionRepositoryImpl(entityInformation, revisionEntityInformation, entityManager);
 		}
 
@@ -105,7 +104,7 @@ public class EnversRevisionRepositoryFactoryBean extends
 			return EnversRevisionRepositoryImpl.class;
 		}
 
-		/* 
+		/*
 		 * (non-Javadoc)
 		 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepository(java.lang.Class, java.lang.Object)
 		 */
